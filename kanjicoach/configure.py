@@ -22,13 +22,13 @@ class ConfigureDialog(QDialog):
         pass
         self.close()
 
-def onConfigure(mw):
-    dialog = ConfigureDialog(browser)
+def configure(mw):
+    dialog = ConfigureDialog(mw)
     dialog.exec_()
 
-def setupMenu(mw):
-    menu = mw.form.menuTools
-    menu.addSeparator()
-    action = menu.addAction('Configure Kanji Coach')
-    action.setShortcut(QKeySequence("Ctrl+Alt+K"))
-    mw.connect(a, SIGNAL("triggered()"), lambda: onConfigure(mw))
+# add action as a new menu item
+def setup_menu(menu):
+    action = QAction("Configure", mw)
+    action.setShortcut(QKeySequence("Ctrl+Shift+K"))
+    action.triggered.connect(configure)
+    menu.addAction(action)

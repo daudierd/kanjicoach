@@ -22,13 +22,13 @@ class LessonDialog(QDialog):
         pass
         self.close()
 
-def onLessonStart(mw):
-    dialog = ConfigureDialog(browser)
+def start_lesson(mw):
+    dialog = LessonDialog(mw)
     dialog.exec_()
 
-def setupMenu(mw):
-    menu = mw.form.menuTools
-    menu.addSeparator()
-    action = menu.addAction('Start lesson with Kanji Coach')
-    action.setShortcut(QKeySequence("Ctrl+Alt+L"))
-    mw.connect(a, SIGNAL("triggered()"), lambda: onLessonStart(mw))
+# add action as a new menu item
+def setup_menu(menu):
+    action = QAction("Start Lesson", mw)
+    action.setShortcut(QKeySequence("Ctrl+Shift+L"))
+    action.triggered.connect(start_lesson)
+    menu.addAction(action)

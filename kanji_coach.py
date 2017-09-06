@@ -16,4 +16,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
+from aqt import *
+
 from kanjicoach import configure, lesson
+from kanjicoach import res_folder
+
+kanjicoachMenu = QMenu("Kanji Coach", mw)
+kanjicoachMenu.setIcon(QIcon(os.path.join(res_folder, 'icon.png')))
+mw.form.menuTools.addMenu(kanjicoachMenu)
+
+configure.setup_menu(kanjicoachMenu)
+lesson.setup_menu(kanjicoachMenu)
