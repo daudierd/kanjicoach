@@ -10,14 +10,9 @@ import sqlite3 as db
 from zipfile import ZipFile
 
 from .. import kanjax_db, kanjax_zip, gifs_zip
+from .exceptions import DatabaseError, StrokeFileNotFound
 
 __all__ = ['get_img']
-
-class StrokeFileNotFound(Exception):
-    pass
-
-class StrokeDatabaseNotFound(Exception):
-    pass
 
 def get_img(kanji, database):
     """Returns the image (in byte format) corresponding to the stroke order
@@ -42,14 +37,14 @@ def get_gif(kanji):
 def get_kanjax(kanji):
     """Returns a png image (in byte format) showing the stroke order of the
     given kanji using the 'kanjax' database."""
-    # In Kanjax database, retreive the filename containing the stroke order
+    # In Kanjax database, retrieve the filename containing the stroke order
     try:
         conn = db.connect(kanjax_db)
         cur = conn.cursor()
         cur.execute("SELECT strokes FROM KanjiIinfo WHERE kanji=?", kanji)
         filename = cur.fetchone()
     except:
-        raise StrokeDatabaseNotFound(
+        raise DatabaseError(
             "Error while trying to connect with kanjax database")
     finally:
         conn.close()
