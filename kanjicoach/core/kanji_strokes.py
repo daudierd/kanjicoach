@@ -49,13 +49,13 @@ def get_kanjax(kanji):
     finally:
         conn.close()
 
-    # If no result could be found despite valid request to the database
-    if not filename:
-        raise StrokeFileNotFound("Couldn't find strokes for " + kanji)
-
     # Get the image file in kanjax.zip and return it as a byte object
+    # A zipped file is automatically read in byte mode
     with ZipFile(kanjax_zip, 'r') as myzip:
-        # A zipped file is automatically read in byte mode
+        # Raise exception if no result could be found in the database or if it
+        # doesn't match an actual file.
+        if (not filename) or (filename[0] not in myzip.namelist()):
+            raise StrokeFileNotFound("Couldn't find strokes for " + kanji)
         with myzip.open(filename[0], 'r') as f:
             return f.read()
 
