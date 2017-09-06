@@ -6,7 +6,7 @@
 # This module implements the core configuration functionalities for Kanji Coach
 # add-on.
 
-from . import config_file
+from .. import config_file
 
 class Configuration():
     def __init__(self):

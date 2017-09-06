@@ -5,7 +5,7 @@
 #
 # This module implements functions to retrieve the parts of a kanji compounds
 
-from . import kanjax_db
+from .. import kanjax_db
 
 def get_parts(kanji):
     """Returns a list of the parts that compose a kanji."""
