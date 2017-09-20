@@ -16,7 +16,77 @@ class ConfigureDialog(QDialog):
 
     def initUI(self):
         """Initialize the UI"""
-        pass
+        self.setWindowTitle("Configure Kanji Coach")
+
+        # TO DO: Uncomment last instruction line when tooltips are implemented 
+        instructions = QLabel("<h4>Instructions:</h4>" +
+            "<p>This window allows you to configure and customize Kanji Coach "+
+            "add-on according to your learning style and objectives." +
+            #"<br/>Just hover your mouse on a field to display related information." +
+            "<hr/></p>")
+        instructions.setWordWrap(True)
+        instructions.setAlignment(Qt.AlignJustify)
+
+        grid = QGridLayout()
+        # First line allows the user to specify the deck used by the add-on
+        grid.addWidget(QLabel("Study deck"), 1, 0)
+        self.deck = QComboBox()
+        grid.addWidget(self.deck, 1, 1)
+        # Second line allows the user to specify which field in the deck
+        # contains the kanji
+        grid.addWidget(QLabel("Kanji field"), 2, 0)
+        self.kanji_fld = QComboBox()
+        grid.addWidget(self.kanji_fld, 2, 1)
+        # Third line allows the user to choose which stroke diagrams to display
+        grid.addWidget(QLabel("Stroke diagrams"), 3, 0)
+        self.strokes = QComboBox()
+        grid.addWidget(self.strokes, 3, 1)
+        # In case the user wants to use a custom field, a combo box will be
+        # displayed
+        self.strokes_fld = QComboBox()
+        grid.addWidget(self.strokes_fld, 4, 1)
+        self.strokes_fld.hide()
+
+        # Letting the user customize lessons' length
+        grid.addWidget(QLabel("Number of kanji per lesson"), 5, 0)
+        self.lesson_nb = QSpinBox()
+        grid.addWidget(self.lesson_nb, 5, 1)
+
+        # Letting the user choose a preferred learning order
+        grid.addWidget(QLabel("Preferred learning order"), 6, 0)
+        self.order = QComboBox()
+        for option in ["JLPT", "Grade", "Frequency", "Heisig", u"みんなの日本語"]:
+            self.order.addItem(option)
+        grid.addWidget(self.order, 6, 1)
+
+        # The user can choose to learn primitives before the kanji that contain
+        # them, as it is the case in Heisig's method
+        self.parts_first = QCheckBox("Learn primitives first (Heisig)")
+        # To prevent Anki from showing cards for kanji that haven't been viewed
+        # with Kanji Coach, the user can suspend them.
+        self.suspend_unlearnt = QCheckBox("Suspend unlearnt cards")
+
+        btn_ok = QPushButton("OK")
+        btn_cancel = QPushButton("Cancel")
+        hbox = QHBoxLayout()
+        hbox.addStretch(1)
+        hbox.addWidget(btn_ok)
+        hbox.addWidget(btn_cancel)
+
+        vbox = QVBoxLayout()
+        vbox.setSpacing(15)
+        vbox.addWidget(instructions)
+        vbox.addLayout(grid)
+        vbox.addWidget(self.parts_first)
+        vbox.addWidget(self.suspend_unlearnt)
+        vbox.addStretch(1)
+        vbox.addLayout(hbox)
+
+        self.setLayout(vbox)
+        self.resize(480, 550)
+
+    def onCancel(self, mode):
+        self.close()
 
     def onConfirm(self, mode):
         pass
