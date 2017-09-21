@@ -7,6 +7,7 @@
 # configuration dialog box in Anki.
 
 from aqt import *
+from .core.configure import Configuration
 
 class ConfigureDialog(QDialog):
     """Browser batch editing dialog"""
@@ -43,7 +44,7 @@ class ConfigureDialog(QDialog):
         # Third line allows the user to choose which stroke diagrams to display
         grid.addWidget(QLabel("Stroke diagrams"), 3, 0)
         self.strokes = QComboBox()
-        self.strokes.addItems(["Animated", "Kanjax diagrams"])
+        self.strokes.addItems([x for x in strokes_dict])
         grid.addWidget(self.strokes, 3, 1)
         # In case the user wants to use a custom field, a combo box will be
         # displayed
@@ -59,7 +60,7 @@ class ConfigureDialog(QDialog):
         # Letting the user choose a preferred learning order
         grid.addWidget(QLabel("Preferred learning order"), 6, 0)
         self.order = QComboBox()
-        for option in ["JLPT", "Grade", "Frequency", "Heisig", u"みんなの日本語"]:
+        for option in sorted([x for x in order_dict]):
             self.order.addItem(option)
         grid.addWidget(self.order, 6, 1)
 
@@ -104,7 +105,7 @@ class ConfigureDialog(QDialog):
             card0 = mw.col.getCard(cids[0])
             model = mw.col.models.get(card0.note().mid)
             fields = mw.col.models.fieldNames(model)
-            self.kanji_fld.addItems(fields)
+            self.kanji_fld.addItems(sorted(fields))
         else:
             QMessageBox.about(self, "Warning",
                 "Your deck does not contain any card!")
@@ -113,7 +114,17 @@ class ConfigureDialog(QDialog):
         self.close()
 
     def onConfirm(self, mode):
-        pass
+        #TODO Load current profile instead of default profile
+        user = "User 1"
+        deck = self.deck.currentText()
+        kanji_fld = self.kanji_fld.currentText()
+        strokes = strokes_dict[self.strokes.currentText()]
+        lesson_nb = self.lesson_nb.value()
+        order = order_dict[self.order.currentText()]
+        parts_first = self.parts_first.isChecked()
+        suspend_unlearnt = self.suspend_unlearnt.isChecked()
+        config.update(user, deck, kanji_fld, strokes, lesson_nb, order,
+                parts_first, suspend_unlearnt)
         self.close()
 
 def configure(mw):
