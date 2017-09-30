@@ -33,8 +33,8 @@ class Configuration():
         if self.is_valid:
             with open(config_file, 'w') as f:
                 f.write(json.dumps(self.config))
-                return true
-        return false
+                return True
+        return False
 
     def is_valid(self):
         """Returns a boolean:
