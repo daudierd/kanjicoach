@@ -25,6 +25,3 @@ order_dict = {"JLPT" : "ord_jlpt.txt",
               "Frequency" : "ord_frequency.txt",
               "Heisig" : "ord_heisig.txt",
               u"みんなの日本語" : "ord_minna.txt"}
-
-# Load the configuration
-config = Configuration()

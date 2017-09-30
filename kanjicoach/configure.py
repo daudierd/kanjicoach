@@ -7,7 +7,11 @@
 # configuration dialog box in Anki.
 
 from aqt import *
+from . import strokes_dict, order_dict
+
+# Load the configuration
 from .core.configure import Configuration
+config = Configuration()
 
 class ConfigureDialog(QDialog):
     """Browser batch editing dialog"""
