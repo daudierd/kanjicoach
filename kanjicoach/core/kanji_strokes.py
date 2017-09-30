@@ -6,11 +6,11 @@
 # This module implements functions to retrieve stroke order diagrams or
 # animations.
 
-import sqlite3 as db
 from zipfile import ZipFile
 
-from .. import kanjax_db, kanjax_zip, gifs_zip
-from .exceptions import DatabaseError, StrokeFileNotFound
+from .. import kanjax_zip, gifs_zip
+from .exceptions import StrokeFileNotFound
+from .kanjax_api import get_strokes
 
 __all__ = ['get_img']
 
@@ -23,7 +23,15 @@ def get_img(kanji, database):
       - database ('gif' | 'kanjax' | 'field={fieldname}'): the designated
       database in which to look for.
     """
-    pass
+    if database == 'gif':
+        return get_gif(kanji)
+    if database == 'kanjax':
+        try:
+            return get_kanjax(kanji)
+        except StrokeFileNotFound:
+            pass
+    if database[:6] == 'field=':
+        return get_from_field(kanji)
 
 def get_gif(kanji):
     """Returns a gif animation (in byte format) of the stroke order of the
@@ -37,17 +45,7 @@ def get_gif(kanji):
 def get_kanjax(kanji):
     """Returns a png image (in byte format) showing the stroke order of the
     given kanji using the 'kanjax' database."""
-    # In Kanjax database, retrieve the filename containing the stroke order
-    try:
-        conn = db.connect(kanjax_db)
-        cur = conn.cursor()
-        cur.execute("SELECT strokes FROM KanjiIinfo WHERE kanji=?", kanji)
-        filename = cur.fetchone()
-    except:
-        raise DatabaseError(
-            "Error while trying to connect with kanjax database")
-    finally:
-        conn.close()
+    filename = get_strokes(kanji).encode()  #converts unicode name to string
 
     # Get the image file in kanjax.zip and return it as a byte object
     # A zipped file is automatically read in byte mode
